@@ -1,6 +1,6 @@
 import { IgetUserRepository, IgetUsersController } from "./protocols.js";
 
-export class getUsersController implements IgetUsersController {
+export class GetUsersController implements IgetUsersController {
   constructor(private readonly getUsersRepository: IgetUserRepository) {}
 
   async handle() {
