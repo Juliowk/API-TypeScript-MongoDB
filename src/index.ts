@@ -1,9 +1,11 @@
-import express from "express";
+import express, { request } from "express";
 import dotenv from "dotenv";
 
 import { GetUsersController } from "./controllers/getUsers/getUsers.js";
 import { MongoGetUsersRepository } from "./repositories/getUsers/mongoGetUsers.js";
 import { MongoClient } from "./database/mongo.js";
+import { MongoCreateUser } from "./repositories/createUsers/mongoCreateusers.js";
+import { CreateUserController } from "./controllers/createUsers/createUsers.js";
 
 const main = async () => {
   dotenv.config();
@@ -28,6 +30,14 @@ const main = async () => {
     const { body, statusCode } = await getUsersControllerObj.handle();
 
     response.send(body).status(statusCode);
+  });
+
+  app.post("/user", async (request, response) => {
+    const repository = new MongoCreateUser();
+    const controller = new CreateUserController(repository);
+    const { statusCode, body } = await controller.handle(request);
+
+    response.status(statusCode).send(body);
   });
 
   app.listen(PORT, () => console.log(`Rodando na porta 3333`));
