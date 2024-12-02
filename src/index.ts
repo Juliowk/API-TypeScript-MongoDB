@@ -1,11 +1,8 @@
-import express, { request } from "express";
+import express from "express";
 import dotenv from "dotenv";
 
-import { GetUsersController } from "./controllers/getUsers/getUsers.js";
-import { MongoGetUsersRepository } from "./repositories/getUsers/mongoGetUsers.js";
 import { MongoClient } from "./database/mongo.js";
-import { MongoCreateUser } from "./repositories/createUsers/mongoCreateusers.js";
-import { CreateUserController } from "./controllers/createUsers/createUsers.js";
+import routeUsers from "./routes/usersRoutes.js";
 
 const main = async () => {
   dotenv.config();
@@ -21,26 +18,9 @@ const main = async () => {
     response.status(200).send("Hello World!");
   });
 
-  app.get("/users", async (request, response) => {
-    const mongoGetUsersRepository = new MongoGetUsersRepository();
-    const getUsersControllerObj = new GetUsersController(
-      mongoGetUsersRepository
-    );
+  app.use(routeUsers);
 
-    const { body, statusCode } = await getUsersControllerObj.handle();
-
-    response.send(body).status(statusCode);
-  });
-
-  app.post("/user", async (request, response) => {
-    const repository = new MongoCreateUser();
-    const controller = new CreateUserController(repository);
-    const { statusCode, body } = await controller.handle(request);
-
-    response.status(statusCode).send(body);
-  });
-
-  app.listen(PORT, () => console.log(`Rodando na porta 3333`));
+  app.listen(PORT, () => console.log(`Rodando na porta ${PORT}`));
 };
 
 main();
