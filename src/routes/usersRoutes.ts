@@ -4,6 +4,8 @@ import { MongoGetUsersRepository } from "../repositories/getUsers/mongoGetUsers.
 import { GetUsersController } from "../controllers/getUsers/getUsers.js";
 import { MongoCreateUser } from "../repositories/createUsers/mongoCreateusers.js";
 import { CreateUserController } from "../controllers/createUsers/createUsers.js";
+import { MongoUpdateUsers } from "../repositories/updateUsers/mongoUpdateUsers.js";
+import { UpdateUserController } from "../controllers/updateUsers/updateUsers.js";
 
 const route = Router();
 
@@ -21,6 +23,13 @@ route.post("/user", async (request, response) => {
   const controller = new CreateUserController(repository);
   const { statusCode, body } = await controller.handle(request);
 
+  response.status(statusCode).send(body);
+});
+
+route.patch("/user/:id", async (request, response) => {
+  const repository = new MongoUpdateUsers();
+  const controller = new UpdateUserController(repository);
+  const { statusCode, body } = await controller.handle(request);
   response.status(statusCode).send(body);
 });
 
