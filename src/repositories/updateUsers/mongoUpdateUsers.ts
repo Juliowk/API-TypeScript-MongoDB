@@ -18,7 +18,7 @@ export class MongoUpdateUsers implements IUpdateUserRepository {
       .findOne({ _id: new ObjectId(id) });
 
     if (!user) {
-      throw new Error("User nor updated");
+      throw new Error("User not updated");
     }
 
     const { _id, ...rest } = user;

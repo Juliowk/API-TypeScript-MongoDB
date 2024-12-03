@@ -10,10 +10,10 @@ import { UpdateUserController } from "../controllers/updateUsers/updateUsers.js"
 const route = Router();
 
 route.get("/users", async (request, response) => {
-  const mongoGetUsersRepository = new MongoGetUsersRepository();
-  const getUsersControllerObj = new GetUsersController(mongoGetUsersRepository);
+  const repository = new MongoGetUsersRepository();
+  const controller = new GetUsersController(repository);
 
-  const { body, statusCode } = await getUsersControllerObj.handle();
+  const { body, statusCode } = await controller.handle();
 
   response.send(body).status(statusCode);
 });
