@@ -4,11 +4,12 @@ import { ObjectId } from "mongodb";
 import { IDeleteUserRepository } from "../../controllers/deleteUsers/protocol.js";
 import { MongoClient } from "../../database/mongo.js";
 import { User } from "../../models/user.js";
+import { MongoUser } from "../mongoProtocols.js";
 
 export class MongoDeleteUser implements IDeleteUserRepository {
   async deleteUser(id: string): Promise<User> {
     const user = await MongoClient.db
-      .collection<Omit<User, "id">>("users")
+      .collection<MongoUser>("users")
       .findOne({ _id: new ObjectId(id) });
 
     if (!user) {
@@ -22,7 +23,7 @@ export class MongoDeleteUser implements IDeleteUserRepository {
     if (!deletedCount) {
       throw new Error("User not deleted");
     }
-    
+
     const { _id, ...rest } = user;
     return { id: _id.toHexString(), ...rest };
   }
